@@ -17,7 +17,6 @@
     win: $('#problems-window'),
     progress: $('#progress'),
     timer: $('#timer'),
-    display: $('#answer-display'),
     countdown: $('#countdown'),
     bestTitle: $('#best-title'),
     resTime: $('#res-time'),
@@ -123,7 +122,6 @@
   }
 
   function updateInputView() {
-    els.display.textContent = input;
     const li = els.list.children[index];
     if (li) li.querySelector('.a').textContent = input;
   }
