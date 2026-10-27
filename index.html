@@ -19,6 +19,11 @@
           <h1>Calculations <span class="times">× 20</span></h1>
           <p class="sub">Solve 20 sums as fast as you can.</p>
           <p class="best" id="best-title"></p>
+          <section class="leaderboard" aria-labelledby="leaderboard-title">
+            <h2 id="leaderboard-title">Leaderboard</h2>
+            <p class="leaderboard-status" id="leaderboard-status" aria-live="polite"></p>
+            <ol id="leaderboard-list"></ol>
+          </section>
         </div>
 
         <div class="view centered" data-view="countdown">
@@ -42,6 +47,13 @@
           <p class="detail" id="res-detail"></p>
           <p class="new-best" id="res-new" hidden>New best!</p>
           <p class="best" id="res-best"></p>
+          <form class="score-form" id="score-form">
+            <label class="sr-only" for="player-name">Player name</label>
+            <input id="player-name" name="player-name" type="text" maxlength="20"
+              autocomplete="nickname" placeholder="Your name" required>
+            <button class="btn primary" id="submit-score" type="submit">Save score</button>
+            <p class="score-status" id="score-status" aria-live="polite"></p>
+          </form>
         </div>
 
       </div>
@@ -93,6 +105,7 @@
     </section>
 
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
 </body>
 </html>

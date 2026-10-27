@@ -5,6 +5,11 @@
   const PENALTY = 2;         // seconds added per wrong answer
   const ADVANCE_DELAY = 180; // ms to show the typed answer before moving on
   const STORE_KEY = 'calc20.best';
+  const PLAYER_KEY = 'calc20.player';
+
+  // Set these to the project URL and public anon key from Supabase.
+  const SUPABASE_URL = 'https://aexomguzzykytrtmarul.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_0ETZw7CZouZH0ZSkuTO6jQ_ZqrGTwJl';
 
   const $ = (sel) => document.querySelector(sel);
   const els = {
@@ -22,8 +27,17 @@
     mistakes: $('#mistakes'),
     mistakesTitle: $('#mistakes-title'),
     keypad: $('#keypad'),
+    leaderboard: $('#leaderboard-list'),
+    leaderboardStatus: $('#leaderboard-status'),
+    scoreForm: $('#score-form'),
+    playerName: $('#player-name'),
+    submitScore: $('#submit-score'),
+    scoreStatus: $('#score-status'),
   };
 
+  const supabase = SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
   let problems = [];
   let index = 0;
   let input = '';
@@ -31,6 +45,7 @@
   let tickId = null;
   let countdownId = null;
   let locked = false;
+  let finalScore = null;
 
   /* ---------- Helpers ---------- */
 
@@ -120,6 +135,66 @@
   function showBestOnTitle() {
     const best = loadBest();
     els.bestTitle.textContent = best !== null ? `Best: ${formatTime(best)}` : '';
+  }
+
+  async function loadLeaderboard() {
+    if (!supabase) {
+      els.leaderboardStatus.textContent = 'Connect Supabase to load scores.';
+      return;
+    }
+
+    els.leaderboardStatus.textContent = 'Loading scores…';
+    const { data, error } = await supabase
+      .from('leaderboard')
+      .select('name, score_seconds, updated_at')
+      .order('score_seconds', { ascending: true })
+      .order('updated_at', { ascending: true })
+      .limit(10);
+
+    if (error) {
+      els.leaderboardStatus.textContent = 'Could not load scores. Check the Supabase setup.';
+      return;
+    }
+
+    els.leaderboard.replaceChildren();
+    data.forEach((entry) => {
+      const item = document.createElement('li');
+      const name = document.createElement('span');
+      const time = document.createElement('span');
+      name.textContent = entry.name;
+      time.textContent = formatTime(Number(entry.score_seconds));
+      item.append(name, time);
+      els.leaderboard.appendChild(item);
+    });
+    els.leaderboardStatus.textContent = data.length ? '' : 'No scores yet — set the first one!';
+  }
+
+  async function saveScore(event) {
+    event.preventDefault();
+    if (!supabase || finalScore === null) return;
+
+    const name = els.playerName.value.trim();
+    if (!name || name.length > 20 || /[\u0000-\u001f\u007f]/.test(name)) {
+      els.scoreStatus.textContent = 'Enter a name of 1–20 characters.';
+      return;
+    }
+
+    els.submitScore.disabled = true;
+    els.scoreStatus.textContent = 'Saving score…';
+    const { error } = await supabase.rpc('submit_score', {
+      p_name: name,
+      p_time_seconds: Number(finalScore.toFixed(1)),
+    });
+    els.submitScore.disabled = false;
+
+    if (error) {
+      els.scoreStatus.textContent = 'Could not save your score. Check the Supabase setup and try again.';
+      return;
+    }
+
+    try { localStorage.setItem(PLAYER_KEY, name); } catch { /* storage unavailable */ }
+    els.scoreStatus.textContent = 'Score submitted. Your fastest time is kept!';
+    await loadLeaderboard();
   }
 
   /* ---------- Game flow ---------- */
@@ -215,6 +290,7 @@
     const wrong = problems.filter((p) => p.given !== p.ans);
     const correct = TOTAL - wrong.length;
     const final = raw + wrong.length * PENALTY;
+    finalScore = final;
 
     const prevBest = loadBest();
     const isNew = prevBest === null || final < prevBest;
@@ -226,6 +302,10 @@
       : `${correct}/${TOTAL} correct`;
     els.resNew.hidden = !isNew;
     els.resBest.textContent = !isNew && prevBest !== null ? `Best: ${formatTime(prevBest)}` : '';
+    els.scoreForm.reset();
+    els.scoreStatus.textContent = '';
+    els.submitScore.disabled = !supabase;
+    try { els.playerName.value = localStorage.getItem(PLAYER_KEY) || ''; } catch { /* storage unavailable */ }
 
     els.mistakes.innerHTML = '';
     if (wrong.length === 0) {
@@ -280,7 +360,9 @@
       else if (e.key === 'Backspace') { e.preventDefault(); pressBack(); flashKey('back'); }
       else if (e.key === 'Enter') { pressEnter(); flashKey('enter'); }
       else if (e.key === 'Escape') quitToMenu();
-    } else if ((state === 'title' || state === 'results') && (e.key === 'Enter' || e.key === ' ')) {
+    } else if ((state === 'title' || state === 'results')
+      && !e.target.closest('input, button')
+      && (e.key === 'Enter' || e.key === ' ')) {
       e.preventDefault();
       startCountdown();
     }
@@ -290,7 +372,9 @@
   $('#again').addEventListener('click', startCountdown);
   $('#menu').addEventListener('click', quitToMenu);
   $('#quit').addEventListener('click', quitToMenu);
+  els.scoreForm.addEventListener('submit', saveScore);
   window.addEventListener('resize', () => { if (getState() === 'play') positionList(); });
 
+  loadLeaderboard();
   showBestOnTitle();
 })();
