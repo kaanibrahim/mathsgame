@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#d4d8de">
+  <meta name="description" content="Solve 20 quick sums as fast as you can.">
+  <title>Calculations × 20</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-state="title">
+  <main class="console">
+
+    <!-- ===== TOP SCREEN ===== -->
+    <section class="half top">
+      <div class="screen">
+
+        <div class="view centered" data-view="title">
+          <h1>Calculations <span class="times">× 20</span></h1>
+          <p class="sub">Solve 20 sums as fast as you can.</p>
+          <p class="best" id="best-title"></p>
+        </div>
+
+        <div class="view centered" data-view="countdown">
+          <div class="countdown" id="countdown">3</div>
+        </div>
+
+        <div class="view" data-view="play">
+          <header class="bar">
+            <button class="quit" id="quit" aria-label="Quit to menu">✕</button>
+            <span id="progress">1 / 20</span>
+            <span id="timer">0:00.0</span>
+          </header>
+          <div class="problems-window" id="problems-window">
+            <ol class="problems" id="problems"></ol>
+          </div>
+        </div>
+
+        <div class="view centered" data-view="results">
+          <p class="label">Your time</p>
+          <div class="final-time" id="res-time">0:00.0</div>
+          <p class="detail" id="res-detail"></p>
+          <p class="new-best" id="res-new" hidden>New best!</p>
+          <p class="best" id="res-best"></p>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="hinge" aria-hidden="true"></div>
+
+    <!-- ===== BOTTOM SCREEN ===== -->
+    <section class="half bottom">
+      <div class="screen">
+
+        <div class="view centered" data-view="title">
+          <button class="btn primary" id="start">Start</button>
+          <p class="hint">Enter each answer on the keypad. It moves on by itself once you've typed enough digits, right or wrong. Wrong answers add 5 seconds.</p>
+        </div>
+
+        <div class="view centered" data-view="countdown">
+          <p class="hint big">Get ready…</p>
+        </div>
+
+        <div class="view pad-view" data-view="play">
+          <div class="answer-display" id="answer-display" aria-live="polite"></div>
+          <div class="keypad" id="keypad">
+            <button data-key="7">7</button>
+            <button data-key="8">8</button>
+            <button data-key="9">9</button>
+            <button data-key="4">4</button>
+            <button data-key="5">5</button>
+            <button data-key="6">6</button>
+            <button data-key="1">1</button>
+            <button data-key="2">2</button>
+            <button data-key="3">3</button>
+            <button data-key="back" class="fn" aria-label="Delete">⌫</button>
+            <button data-key="0">0</button>
+            <button data-key="enter" class="fn" aria-label="Submit">↵</button>
+          </div>
+        </div>
+
+        <div class="view results-bottom" data-view="results">
+          <h2 id="mistakes-title">Mistakes</h2>
+          <ul class="mistakes" id="mistakes"></ul>
+          <div class="actions">
+            <button class="btn" id="menu">Menu</button>
+            <button class="btn primary" id="again">Play again</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
