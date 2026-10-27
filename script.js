@@ -254,14 +254,24 @@
 
   /* ---------- Input wiring ---------- */
 
-  els.keypad.addEventListener('click', (e) => {
+  function activateKeypadButton(e) {
     const btn = e.target.closest('button[data-key]');
-    if (!btn) return;
+    if (!btn) return false;
     const key = btn.dataset.key;
     if (key === 'back') pressBack();
     else if (key === 'enter') pressEnter();
     else pressDigit(key);
     flashKey(key);
+    return true;
+  }
+
+  els.keypad.addEventListener('pointerdown', (e) => {
+    if (!activateKeypadButton(e)) return;
+    e.preventDefault();
+  });
+
+  els.keypad.addEventListener('click', (e) => {
+    if (e.detail === 0) activateKeypadButton(e);
   });
 
   function flashKey(key) {
