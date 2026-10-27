@@ -15,4 +15,4 @@ Open `index.html` in a browser.
 - The top screen shows the problems; they scroll up as each one is answered, right or wrong.
 - The bottom screen has a number pad (a physical keyboard works too: digits, Backspace, Enter, Esc to quit).
 - An answer is submitted automatically once you've typed as many digits as the answer has. Enter submits early.
-- Final time = raw time + 5 seconds per mistake. Your best time is saved in the browser.
+- Final time = raw time + 2 seconds per mistake. Your best time is saved in the browser.
