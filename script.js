@@ -2,7 +2,7 @@
   'use strict';
 
   const TOTAL = 20;          // number of problems
-  const PENALTY = 5;         // seconds added per wrong answer
+  const PENALTY = 2;         // seconds added per wrong answer
   const ADVANCE_DELAY = 180; // ms to show the typed answer before moving on
   const STORE_KEY = 'calc20.best';
 
