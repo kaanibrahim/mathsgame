@@ -12,6 +12,7 @@
     win: $('#problems-window'),
     progress: $('#progress'),
     timer: $('#timer'),
+    display: $('#answer-display'),
     countdown: $('#countdown'),
     bestTitle: $('#best-title'),
     resTime: $('#res-time'),
@@ -107,6 +108,7 @@
   }
 
   function updateInputView() {
+    els.display.textContent = input;
     const li = els.list.children[index];
     if (li) li.querySelector('.a').textContent = input;
   }
@@ -254,15 +256,14 @@
 
   /* ---------- Input wiring ---------- */
 
-  // pointerdown feels instant on touch screens (no click delay)
-  els.keypad.addEventListener('pointerdown', (e) => {
+  els.keypad.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-key]');
     if (!btn) return;
-    e.preventDefault();
     const key = btn.dataset.key;
     if (key === 'back') pressBack();
     else if (key === 'enter') pressEnter();
     else pressDigit(key);
+    flashKey(key);
   });
 
   function flashKey(key) {
