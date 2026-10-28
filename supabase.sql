@@ -4,11 +4,27 @@ create table if not exists public.leaderboard (
     char_length(btrim(name)) between 1 and 20
     and name !~ '[[:cntrl:]]'
   ),
-  normalized_name text generated always as (lower(btrim(name))) stored unique,
+  normalized_name text generated always as (lower(btrim(name))) stored,
   score_seconds numeric(6, 1) not null check (score_seconds > 0 and score_seconds <= 3600),
+  score_date date not null default ((now() at time zone 'UTC')::date),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.leaderboard
+  add column if not exists score_date date;
+
+update public.leaderboard
+set score_date = (created_at at time zone 'UTC')::date
+where score_date is null;
+
+alter table public.leaderboard
+  alter column score_date set default ((now() at time zone 'UTC')::date),
+  alter column score_date set not null,
+  drop constraint if exists leaderboard_normalized_name_key;
+
+create unique index if not exists leaderboard_score_date_normalized_name_key
+  on public.leaderboard (score_date, normalized_name);
 
 alter table public.leaderboard enable row level security;
 
@@ -27,6 +43,8 @@ language plpgsql
 security definer
 set search_path = ''
 as $$
+declare
+  v_today date;
 begin
   if p_name is null
     or pg_catalog.char_length(pg_catalog.btrim(p_name)) not between 1 and 20
@@ -42,9 +60,14 @@ begin
     pg_catalog.hashtext('mathsgame_leaderboard')
   );
 
-  insert into public.leaderboard (name, score_seconds)
-  values (pg_catalog.btrim(p_name), pg_catalog.round(p_time_seconds, 1))
-  on conflict (normalized_name) do update
+  v_today := pg_catalog.timezone('UTC', pg_catalog.clock_timestamp())::date;
+
+  delete from public.leaderboard
+  where score_date < v_today;
+
+  insert into public.leaderboard (name, score_seconds, score_date)
+  values (pg_catalog.btrim(p_name), pg_catalog.round(p_time_seconds, 1), v_today)
+  on conflict (score_date, normalized_name) do update
     set name = excluded.name,
         score_seconds = excluded.score_seconds,
         updated_at = pg_catalog.now()
@@ -55,9 +78,11 @@ begin
       order by score_seconds asc, updated_at asc, id asc
     ) as position
     from public.leaderboard
+    where score_date = v_today
   )
   delete from public.leaderboard
-  where id in (select id from ranked where position > 10);
+  where score_date = v_today
+    and id in (select id from ranked where position > 10);
 end;
 $$;
 
