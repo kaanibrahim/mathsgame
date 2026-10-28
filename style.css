@@ -131,7 +131,7 @@ h1 .times { color: var(--accent); white-space: nowrap; }
   inset: 0;
   margin: auto;
   width: 100%;
-  max-height: min(80vh, 40rem);
+  max-height: min(90vh, 48rem);
   max-width: 24rem;
   padding: 24px 12px 12px;
   border: 1px solid var(--key-edge);
@@ -177,7 +177,7 @@ h1 .times { color: var(--accent); white-space: nowrap; }
   text-align: center;
 }
 .leaderboard ol {
-  max-height: 55vh;
+  max-height: 75vh;
   overflow-y: auto;
   margin: 4px 0 0;
   padding: 0;
@@ -488,6 +488,5 @@ h1 .times { color: var(--accent); white-space: nowrap; }
     line-height: 1.1;
   }
   .leaderboard { padding: 6px 10px; }
-  .leaderboard ol { max-height: 4em; }
   .hint { margin-top: 6px; font-size: .82rem; }
 }
