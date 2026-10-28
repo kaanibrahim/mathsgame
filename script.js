@@ -135,6 +135,10 @@
     els.bestTitle.textContent = best !== null ? `Best: ${formatTime(best)}` : '';
   }
 
+  function utcDate() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
   async function loadLeaderboard() {
     if (!supabase) {
       els.leaderboardStatus.textContent = 'Connect Supabase to load scores.';
@@ -145,6 +149,7 @@
     const { data, error } = await supabase
       .from('leaderboard')
       .select('name, score_seconds, updated_at')
+      .eq('score_date', utcDate())
       .order('score_seconds', { ascending: true })
       .order('updated_at', { ascending: true })
       .limit(10);
@@ -191,7 +196,7 @@
     }
 
     try { localStorage.setItem(PLAYER_KEY, name); } catch { /* storage unavailable */ }
-    els.scoreStatus.textContent = 'Score submitted. Your fastest time is kept!';
+    els.scoreStatus.textContent = 'Score submitted. Your fastest time today is kept!';
     await loadLeaderboard();
   }
 
