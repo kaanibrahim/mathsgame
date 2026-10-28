@@ -19,12 +19,6 @@
           <h1>Calculations <span class="times">× 20</span></h1>
           <p class="sub">Solve 20 sums as fast as you can.</p>
           <p class="best" id="best-title"></p>
-          <section class="leaderboard" aria-labelledby="leaderboard-title">
-            <h2 id="leaderboard-title">Today's leaderboard</h2>
-            <p class="leaderboard-status">Resets daily at midnight UTC.</p>
-            <p class="leaderboard-status" id="leaderboard-status" aria-live="polite"></p>
-            <ol id="leaderboard-list"></ol>
-          </section>
         </div>
 
         <div class="view centered" data-view="countdown">
@@ -67,6 +61,12 @@
       <div class="screen">
 
         <div class="view centered" data-view="title">
+          <section class="leaderboard" aria-labelledby="leaderboard-title">
+            <h2 id="leaderboard-title">Today's leaderboard</h2>
+            <p class="leaderboard-status">Resets daily at midnight UTC.</p>
+            <p class="leaderboard-status" id="leaderboard-status" aria-live="polite"></p>
+            <ol id="leaderboard-list"></ol>
+          </section>
           <button class="btn primary" id="start">Start</button>
           <p class="hint">Enter each answer on the keypad. It moves on by itself once you've typed enough digits, right or wrong. Wrong answers add 2 seconds.</p>
         </div>

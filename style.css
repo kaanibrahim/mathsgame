@@ -129,13 +129,17 @@ h1 .times { color: var(--accent); white-space: nowrap; }
 .leaderboard {
   width: 100%;
   min-height: 0;
-  margin-top: 8px;
+  max-width: 24rem;
+  padding: 10px 12px;
+  border: 1px solid var(--key-edge);
+  border-radius: 12px;
+  background: #fff;
   text-align: left;
 }
 .leaderboard h2 {
   margin: 0;
-  color: var(--muted);
-  font-size: .85rem;
+  color: var(--ink);
+  font-size: .9rem;
   text-align: center;
   text-transform: uppercase;
   letter-spacing: .08em;
@@ -147,7 +151,7 @@ h1 .times { color: var(--accent); white-space: nowrap; }
   text-align: center;
 }
 .leaderboard ol {
-  max-height: 7em;
+  max-height: 6em;
   overflow-y: auto;
   margin: 4px 0 0;
   padding: 0;
@@ -416,4 +420,14 @@ h1 .times { color: var(--accent); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) {
   .problems, .problems li { transition: none; }
   .countdown { animation: none; }
+}
+
+@media (max-height: 700px) {
+  .half.bottom .view.centered[data-view="title"] {
+    gap: 4px;
+    padding: 8px;
+  }
+  .leaderboard { padding: 6px 10px; }
+  .leaderboard ol { max-height: 4em; }
+  .hint { margin-top: 6px; font-size: .82rem; }
 }
