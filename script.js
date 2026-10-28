@@ -26,6 +26,9 @@
     mistakes: $('#mistakes'),
     mistakesTitle: $('#mistakes-title'),
     keypad: $('#keypad'),
+    leaderboardToggle: $('#leaderboard-toggle'),
+    leaderboardPanel: $('#leaderboard'),
+    leaderboardClose: $('#leaderboard-close'),
     leaderboard: $('#leaderboard-list'),
     leaderboardStatus: $('#leaderboard-status'),
     scoreForm: $('#score-form'),
@@ -385,9 +388,18 @@
   $('#again').addEventListener('click', startCountdown);
   $('#menu').addEventListener('click', quitToMenu);
   $('#quit').addEventListener('click', quitToMenu);
+  els.leaderboardToggle.addEventListener('click', () => {
+    els.leaderboardPanel.showModal();
+    els.leaderboardToggle.setAttribute('aria-expanded', 'true');
+    loadLeaderboard();
+  });
+  els.leaderboardClose.addEventListener('click', () => els.leaderboardPanel.close());
+  els.leaderboardPanel.addEventListener('close', () => {
+    els.leaderboardToggle.setAttribute('aria-expanded', 'false');
+    els.leaderboardToggle.focus();
+  });
   els.scoreForm.addEventListener('submit', saveScore);
   window.addEventListener('resize', () => { if (getState() === 'play') positionList(); });
 
-  loadLeaderboard();
   showBestOnTitle();
 })();
