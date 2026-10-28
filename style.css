@@ -454,10 +454,40 @@ h1 .times { color: var(--accent); white-space: nowrap; }
     padding: 8px;
   }
   .half.top .view.centered[data-view="results"] {
-    justify-content: flex-start;
-    overflow-y: auto;
-    padding: 8px;
+    justify-content: center;
+    overflow: hidden;
+    padding: 4px 8px;
+    gap: 2px;
+  }
+  .half.top .final-time {
+    font-size: clamp(2.5rem, 12vw, 3.5rem);
+  }
+  .half.top .detail,
+  .half.top .new-best,
+  .half.top .best {
+    margin-top: 1px;
+  }
+  .half.top .new-best {
+    padding: 2px 8px;
+  }
+  .half.top .best {
+    font-size: .85rem;
+  }
+  .half.top .score-form {
+    margin-top: 2px;
     gap: 4px;
   }
+  .half.top .score-form input {
+    padding: .35em .55em;
+  }
+  .half.top .score-form .btn {
+    padding: .3em .55em;
+  }
+  .half.top .score-status {
+    font-size: .72rem;
+    line-height: 1.1;
+  }
+  .leaderboard { padding: 6px 10px; }
+  .leaderboard ol { max-height: 4em; }
   .hint { margin-top: 6px; font-size: .82rem; }
 }
